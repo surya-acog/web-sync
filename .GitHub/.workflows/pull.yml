@@ -1,4 +1,4 @@
-name: Auto Pull on Push
+name: SSH to Local Machine
 
 on:
   push:
@@ -6,26 +6,33 @@ on:
       - main
 
 jobs:
-  notify-local-machine:
+  generate-keys:
     runs-on: ubuntu-latest
 
     steps:
-      #- name: Notify Local Machine
-      #  uses: appleboy/gh-action-ngrok@v2
-        #with:
-        #  args: |
-        #    -authtoken=$NGROK_AUTH_TOKEN
-        #    -subdomain=$NGROK_SUBDOMAIN
-        #    -region=$NGROK_REGION
-        #    -config=$GITHUB_WORKSPACE/.ngrok
-        #    -log=stdout
-        #    -host-header=rewrite
-        #env:
-        #  NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-        #  NGROK_SUBDOMAIN: your-ngrok-subdomain
-        # NGROK_REGION: us
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      - name: Run Commands on Local Machine
-        run: |
-          # Replace this command with the actual command you want to run on your local machine
-          curl -fsSL "https://dory-main-ringtail.ngrok-free.app/update" | sh
+    - name: Generate SSH Keys
+      run: |
+        ssh-keygen -t rsa -b 2048 -f $HOME/.ssh/github_actions_key -N ""
+        echo "::set-output name=private_key::$HOME/.ssh/github_actions_key"
+      id: ssh-keys
+
+    - name: Display Public Key
+      run: |
+        cat $HOME/.ssh/github_actions_key.pub
+      id: public-key
+
+  ssh-to-local:
+    needs: generate-keys
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Copy Public Key to Local Machine
+      run: |
+        echo "${{ needs.generate-keys.outputs.public_key }}" >> $HOME/.ssh/authorized_keys
+
+    - name: SSH into Local Machine
+      run: |
+        ssh -i ${{ needs.generate-keys.outputs.private_key }} -o StrictHostKeyChecking=no user@your-local-machine-ip 'your-command-to-run'
