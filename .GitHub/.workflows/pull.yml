@@ -3,7 +3,7 @@ name: SSH to Local Machine
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   generate-keys:
