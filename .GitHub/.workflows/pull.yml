@@ -10,24 +10,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Notify Local Machine
-        uses: appleboy/gh-action-ngrok@v2
-        with:
-          args: |
-            -authtoken=$NGROK_AUTH_TOKEN
-            -subdomain=$NGROK_SUBDOMAIN
-            -region=$NGROK_REGION
-            -config=$GITHUB_WORKSPACE/.ngrok
-            -log=stdout
-            -host-header=rewrite
-        env:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-          NGROK_SUBDOMAIN: your-ngrok-subdomain
-          NGROK_REGION: us
+      #- name: Notify Local Machine
+      #  uses: appleboy/gh-action-ngrok@v2
+        #with:
+        #  args: |
+        #    -authtoken=$NGROK_AUTH_TOKEN
+        #    -subdomain=$NGROK_SUBDOMAIN
+        #    -region=$NGROK_REGION
+        #    -config=$GITHUB_WORKSPACE/.ngrok
+        #    -log=stdout
+        #    -host-header=rewrite
+        #env:
+        #  NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+        #  NGROK_SUBDOMAIN: your-ngrok-subdomain
+        # NGROK_REGION: us
 
       - name: Run Commands on Local Machine
         run: |
           # Replace this command with the actual command you want to run on your local machine
-          curl -fsSL "$NGROK_URL/execute-command" | sh
-        env:
-          NGROK_URL: ${{ steps.notify-local-machine.outputs.ngrok_url }}
+          curl -fsSL "https://dory-main-ringtail.ngrok-free.app/update" | sh
