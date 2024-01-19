@@ -20,7 +20,7 @@ jobs:
       id: ssh-keys
 
     - name: Display Public Key
-      run: |
+     run: |
         cat $HOME/.ssh/github_actions_key.pub
       id: public-key
 
