@@ -9,30 +9,32 @@ jobs:
   generate-keys:
     runs-on: ubuntu-latest
 
+   # steps:
+   # - name: Checkout code
+   #   uses: actions/checkout@v2
+
+   # - name: Generate SSH Keys
+   #   run: |
+   #     ssh-keygen -t rsa -b 2048 -f $HOME/.ssh/github_actions_key -N ""
+   #    echo "::set-output name=private_key::$HOME/.ssh/github_actions_key"
+   #   id: ssh-keys
+
+   # - name: Display Public Key
+   #  run: |
+   #     cat $HOME/.ssh/github_actions_key.pub
+   #   id: public-key
+
+  #ssh-to-local:
+  #  needs: generate-keys
+  #  runs-on: ubuntu-latest
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Generate SSH Keys
+    - name: Copy Private key
       run: |
-        ssh-keygen -t rsa -b 2048 -f $HOME/.ssh/github_actions_key -N ""
-        echo "::set-output name=private_key::$HOME/.ssh/github_actions_key"
-      id: ssh-keys
-
-    - name: Display Public Key
-     run: |
-        cat $HOME/.ssh/github_actions_key.pub
-      id: public-key
-
-  ssh-to-local:
-    needs: generate-keys
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Copy Public Key to Local Machine
-      run: |
-        echo "${{ needs.generate-keys.outputs.public_key }}" >> $HOME/.ssh/authorized_keys
+          mkdir -p ~/.ssh
+          echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
 
     - name: SSH into Local Machine
       run: |
-        ssh -i ${{ needs.generate-keys.outputs.private_key }} -o StrictHostKeyChecking=no user@your-local-machine-ip 'your-command-to-run'
+        ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p 19384 surya@0.tcp.in.ngrok.io 'cd ~/web_sync && git pull origin master'
