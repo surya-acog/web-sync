@@ -14,8 +14,7 @@ jobs:
         run: |
             mkdir ~/.ssh
             echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            ls -al ~/.ssh
 
       - name: SSH into Local Machine
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p 19384 surya@0.tcp.in.ngrok.io 'cd ~/web_sync && git pull origin master'
+          ssh -i ~/.ssh/id_rsa -p 19384 surya@0.tcp.in.ngrok.io 'cd ~/web_sync && git pull origin master'
