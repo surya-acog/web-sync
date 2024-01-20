@@ -12,9 +12,10 @@ jobs:
     steps:
       - name: Copy Private key
         run: |
-            mkdir -p ~/.ssh
-            echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
-            chmod 600 ~/.ssh/id_rsa
+#            mkdir -p ~/.ssh
+#            echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+#            chmod 600 ~/.ssh/id_rsa
+             ls -al
 
       - name: SSH into Local Machine
         run: |
