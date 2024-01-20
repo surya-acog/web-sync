@@ -12,7 +12,9 @@ jobs:
     steps:
       - name: Copy Private key
         run: |
-            pwd
+            mkdir ~/.ssh
+            echo "${{ secrets.PRIVATE_KEY }}" > ~/.ssh/id_rsa
+            cat ~/.ssh/id_rsa
 
       - name: SSH into Local Machine
         run: |
