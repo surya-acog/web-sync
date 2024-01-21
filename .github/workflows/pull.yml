@@ -18,4 +18,4 @@ jobs:
 
       - name: SSH into Local Machine
         run: |
-          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p 2222 surya@own1.aganitha.ai 'mkdir action'
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -p 2222 surya@own1.aganitha.ai 'cd ~/web-sync && git pull'
